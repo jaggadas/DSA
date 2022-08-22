@@ -2,18 +2,17 @@ import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
-        MyLinkedList myLinkedList=new MyLinkedList(5);
-        myLinkedList.prepend(16);
-        myLinkedList.prepend(3);
-        myLinkedList.append(6);
-        myLinkedList.insert(2,9);
-        myLinkedList.print();
-
-        myLinkedList.reverse();
-
-        myLinkedList.print();
-        System.out.println(myLinkedList);
-
+      MyStack myStack=new MyStack();
+        System.out.println(myStack.peek());
+        myStack.push(5);
+        System.out.println(myStack.peek());
+        myStack.push(7);
+        System.out.println(myStack.peek());
+        myStack.push(79);
+        System.out.println(myStack.peek());
+        System.out.println(myStack.pop());
+        myStack.push(7);
+        System.out.println(myStack.peek());
 
     }
 
@@ -207,6 +206,7 @@ class MyDoublyLinkedList{
             length--;
             return;
         }
+
         MyDoublyLinkedListNode temp=head;
         int indexCount=0;
         while(temp!=null){
@@ -226,19 +226,20 @@ class MyDoublyLinkedList{
         return "MyDoublyLinkedList {"+"head :"+head.value+", tail :"+tail.value+", length :"+length+"}";
     }
 }
-class MyLinkedList{
-    private class MyLinkedListNode{
-        int value;
-        MyLinkedListNode next;
-        MyLinkedListNode(int value, MyLinkedListNode node){
-            this.value=value;
-            this.next=node;
-        }
-        @Override
-        public String toString(){
-            return ""+value;
-        }
+class MyLinkedListNode{
+    int value;
+    MyLinkedListNode next;
+    MyLinkedListNode(int value, MyLinkedListNode node){
+        this.value=value;
+        this.next=node;
     }
+    @Override
+    public String toString(){
+        return ""+value;
+    }
+}
+class MyLinkedList{
+
     MyLinkedListNode head;
     MyLinkedListNode tail;
     int length;
@@ -360,7 +361,74 @@ class MyLinkedList{
     }
 }
 
+//own stack using arrays
+class MyStackUsingArray {
+    private List<Integer> array = new ArrayList<>();
 
+    public MyStackUsingArray() {
+    }
+
+    public int peak() {
+        if (array.size() == 0) {
+            throw new EmptyStackException();
+        }
+        return array.get(this.array.size() - 1);
+    }
+
+    public int pop() {
+        if (array.size() == 0) {
+            throw new EmptyStackException();
+        }
+        return array.remove(array.size() - 1);
+    }
+
+    public void push(int valueToPush) {
+        array.add(valueToPush);
+    }
+
+    public void printStack() {
+        for (int value : array) {
+            System.out.println(value);
+        }
+}
+}
+//creating own stack class
+class MyStack{
+    MyLinkedListNode top;
+    MyLinkedListNode bottom;
+    int length;
+
+    MyStack(){
+        this.top=null;
+        this.bottom=null;
+        this.length=0;
+    }
+     MyLinkedListNode peek(){
+        return top;
+    }
+    MyLinkedListNode pop(){
+        MyLinkedListNode temp=top;
+        if(top==bottom){
+            bottom=null;
+        }
+        top=top.next;
+        length--;
+
+        return top;
+    }
+    void push(int value){
+        MyLinkedListNode node=new MyLinkedListNode(value,top);
+        if(length==0){
+            bottom=node;
+        }
+        top=node;
+        length++;
+
+    }
+    boolean isEmpty(){
+        return length==0;
+    }
+}
 //creating own array class
 class ArrayOwn{
     private Object[] data;
