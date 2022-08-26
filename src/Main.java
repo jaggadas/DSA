@@ -1,19 +1,27 @@
+import netscape.javascript.JSObject;
+
+
 import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
-      MyStack myStack=new MyStack();
-        System.out.println(myStack.peek());
-        myStack.push(5);
-        System.out.println(myStack.peek());
-        myStack.push(7);
-        System.out.println(myStack.peek());
-        myStack.push(79);
-        System.out.println(myStack.peek());
-        System.out.println(myStack.pop());
-        myStack.push(7);
-        System.out.println(myStack.peek());
-
+        Graph graph=new Graph();
+        graph.addVertex(0);
+        graph.addVertex(1);
+        graph.addVertex(2);
+        graph.addVertex(3);
+        graph.addVertex(4);
+        graph.addVertex(5);
+        graph.addVertex(6);
+        graph.addEdge(3, 1);
+        graph.addEdge(3, 4);
+        graph.addEdge(4, 2);
+        graph.addEdge(4, 5);
+        graph.addEdge(1, 2);
+        graph.addEdge(1, 0);
+        graph.addEdge(0, 2);
+        graph.addEdge(6, 5);
+        graph.showConnections();
     }
 
     //finds common element in two arrays , and returns true
@@ -117,20 +125,222 @@ public class Main {
 
 }
 
+class MyTreeNode {
+    MyTreeNode left;
+    MyTreeNode right;
+    int value;
+    MyTreeNode(int value){
+        left=null;
+        right=null;
+        this.value=value;
+    }
+}
+//own BinarySearchTree
+class BinarySearchTree{
+    MyTreeNode root;
+    BinarySearchTree(){
+        root=null;
+    }
+    void insert(int value){
+        MyTreeNode node=new MyTreeNode(value);
+        if(root==null){
+            root=node;
+            return;
+        }
+        MyTreeNode current= root;
+        while(true){
+            if(node.value>current.value){
+                if(current.right==null){
+                    current.right=node;
+                    return;
+                }
+                current=current.right;
+            }else{
+                if(current.left==null){
+                    current.left=node;
+                    return;
+                }
+                current=current.left;
+        }
+    }}
+    boolean lookup(int value){
+        if(root==null){
+            System.out.println("Not Found");
+            return false;
+        }
+        MyTreeNode current= root;
+        while(current!=null){
+            if(current.value==value){
+                System.out.println("Found");
+                return true;
+            }
+            else if(value<current.value){
+                current=current.left;
+            }else {
+                current=current.right;
+            }
 
+
+        }
+        return false;
+    }
+    int count=0;
+    public void printTree() {
+        count = 0;
+        printTree(root);
+    }
+    private void printTree(MyTreeNode node) {
+        System.out.print(node.value);
+        System.out.println();
+        count++;
+        if(node.left != null) {
+            System.out.print("\t".repeat(Math.max(0, count)) + "Left: ");
+            printTree(node.left);
+        }
+        if(node.right != null) {
+            System.out.print("\t".repeat(Math.max(0, count)) +"Right: ");
+            printTree(node.right);
+        }
+        count--;
+    }
+
+    public void remove(int value) {
+        if (root == null) {
+            return;
+        }
+
+        MyTreeNode nodeToRemove = root;
+        MyTreeNode parentNode = null;
+        while (nodeToRemove.value != value) { //Searching for the node to remove and it's parent
+            parentNode = nodeToRemove;
+            if (value < nodeToRemove.value) {
+                nodeToRemove = nodeToRemove.left;
+            } else if (value > nodeToRemove.value) {
+                nodeToRemove = nodeToRemove.right;
+            }
+        }
+
+        MyTreeNode replacementNode = null;
+        if (nodeToRemove.right != null) { //We have a right node
+            replacementNode = nodeToRemove.right;
+            if(replacementNode.left == null) { //We don't have a left node
+                replacementNode.left=nodeToRemove.left;
+            } else { //We have a left node, lets find the leftmost
+                MyTreeNode replacementParentNode = nodeToRemove;
+                while (replacementNode.left != null) {
+                    replacementParentNode = replacementNode;
+                    replacementNode = replacementNode.left;
+                }
+                replacementParentNode.left=null;
+                replacementNode.left=nodeToRemove.left;
+                replacementNode.right=nodeToRemove.right;
+            }
+        } else if(nodeToRemove.left != null) {//We only have a left node
+            replacementNode = nodeToRemove.left;
+        }
+
+        if(parentNode == null) {
+            root = replacementNode;
+        } else if(parentNode.left == nodeToRemove) { //We are a left child
+            parentNode.left=replacementNode;
+        } else { //We are a right child
+            parentNode.right=replacementNode;
+        }
+    }
+
+}
+
+//own graph
+class Graph{
+    int numberOfNodes=0;
+   HashMap<Integer,ArrayList<Integer>> adjacentList=new HashMap<>();
+
+    Graph(){
+        numberOfNodes=0;
+    }
+    void addVertex(Integer node){
+        if(adjacentList.containsKey(node)){
+            System.out.println("Already exists");
+            return;
+        }
+        adjacentList.put(node,new ArrayList<>());
+    }
+    void addEdge(Integer node1,Integer node2){
+        adjacentList.get(node1).add(node2);
+        adjacentList.get(node2).add(node1);
+    }
+    void showConnections(){
+        Set<Integer> allNodes=adjacentList.keySet();
+        for(int node:allNodes){
+            ArrayList<Integer> nodeConnections=adjacentList.get(node);
+            String connections="";
+
+            for(int vertex:nodeConnections){
+                connections+=vertex+" ";
+            }
+            System.out.println(node+"-->"+connections);
+        }
+    }
+}
+
+//own queue
+class MyQueue{
+    MyLinkedListNode first;
+    MyLinkedListNode last;
+    int length;
+    MyQueue(){
+        first=null;
+        last=null;
+        length=0;
+    }
+    MyLinkedListNode peek(){
+        return first;
+    }
+    void enqueue(int value){
+        MyLinkedListNode node=new MyLinkedListNode(value,null);
+        if(length==0){
+            length++;
+            first=node;
+            last=node;
+            return;
+        }
+        last.next=node;
+        last=node;
+        length++;
+
+    }
+    void dequeue(){
+        if(first==null){
+            return;
+        }
+        if(first==last){
+            last=null;
+        }
+        first=first.next;
+        length--;
+    }
+    @Override
+    public String toString(){
+        return "MyQueue {"+"first :"+first+", last :"+last+", length :"+length+"}";
+    }
+}
 
 //own linked list
 class MyDoublyLinkedList{
     MyDoublyLinkedListNode head;
     MyDoublyLinkedListNode tail;
     int length;
+    JSObject json;
+
     private class MyDoublyLinkedListNode{
         int value;
+
         MyDoublyLinkedListNode next;
         MyDoublyLinkedListNode prev;
         MyDoublyLinkedListNode(int value, MyDoublyLinkedListNode next,MyDoublyLinkedListNode prev){
             this.value=value;
             this.next=next;
+
             this.prev=prev;
         }
         @Override
