@@ -5,23 +5,60 @@ import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
-        Graph graph=new Graph();
-        graph.addVertex(0);
-        graph.addVertex(1);
-        graph.addVertex(2);
-        graph.addVertex(3);
-        graph.addVertex(4);
-        graph.addVertex(5);
-        graph.addVertex(6);
-        graph.addEdge(3, 1);
-        graph.addEdge(3, 4);
-        graph.addEdge(4, 2);
-        graph.addEdge(4, 5);
-        graph.addEdge(1, 2);
-        graph.addEdge(1, 0);
-        graph.addEdge(0, 2);
-        graph.addEdge(6, 5);
-        graph.showConnections();
+        System.out.println(findFibonacciRecursive1(5));
+        System.out.println(findFibonacciIterative(5));
+
+    }
+    //factorial recursive
+    public static int findFactorialRecursive(int number){
+
+      if(number==1){
+          return number;
+      }
+      number*=findFactorialRecursive(number-1);
+      return number;
+    }
+    static int a=0;
+    static int b=1;
+    //fibonacci iterative
+    public static int findFibonacciIterative(int numberOfTerms){//O(n)
+        int a=0;
+        int b=1;
+        for(int i=0;i<numberOfTerms-1;i++){
+            int temp=a;
+            a=b;
+            b+=temp;
+        }
+        return b;
+
+    }
+    //reverse string with recursion
+  //  see course
+   // static int i=0;
+//    public static char[] reverse(char[] string){
+//
+//        char temp=string[i];
+//        string[i]=string[string.length-1-i];
+//        string[string.length-1-i]=temp;
+//
+//    }
+    //fibonacci recursive O(2^n) exponential
+    public static int findFibonacciRecursive(int numberOfTerms){
+
+        if(numberOfTerms==1){
+            return 0;
+        }
+        System.out.println(a+b);
+        int temp=a;
+        a=b;
+        b=temp+b;
+        return findFibonacciRecursive(numberOfTerms-1);
+    }
+    public static int findFibonacciRecursive1(int n){
+        if(n<2){
+            return n;
+        }
+        return findFibonacciRecursive1(n-1)+findFibonacciRecursive1(n-2);
     }
 
     //finds common element in two arrays , and returns true
@@ -122,7 +159,6 @@ public class Main {
         }
         return -1;
     }
-
 }
 
 class MyTreeNode {
