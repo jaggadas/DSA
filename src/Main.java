@@ -5,10 +5,74 @@ import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println(findFibonacciRecursive1(5));
-        System.out.println(findFibonacciIterative(5));
 
+        Integer [] list={4,1,2,5,7,3,8,3};
+        System.out.println(Arrays.toString(insertionSort(list)));
     }
+
+    //insertion sort worst O(n2) best O(n)
+    public static Integer[] insertionSort(Integer[] array) {
+        List<Integer> list = new LinkedList<>(Arrays.asList(array)); //Using linked list so shifting will be efficient
+        for (int i = 1; i < list.size(); i++) { //Fixed: i start at i = 1
+            if (list.get(i) <= list.get(0)) { //Fixed: duplicate values sort by changing  to "<="
+                //Checking if current number is supposed to be first
+                list.add(0, list.get(i)); //Moving the number to first position
+                list.remove(i + 1);
+            } else {
+                // only sort number smaller than number on the left of it.
+                // This is the part of insertion sort that makes it fast
+                // if the array is almost sorted.
+                if (list.get(i) < list.get(i - 1)) {
+                    //find where number should go
+                    for (int j = 1; j < i; j++) {
+                        if (list.get(i) >= list.get(j - 1) && list.get(i) < list.get(j)) {
+                            //move number to the correct spot
+                            list.add(j, list.get(i));
+                            list.remove(i + 1);
+                        }
+                    }
+                }
+            }
+        }
+        return list.toArray(new Integer[0]);
+    }
+
+//selection O(n2) space O(1)
+    public static int[] selectionSort(int[] list){
+
+        int minIndex=0;
+        for(int i=0;i< list.length-1;i++){
+            minIndex=i;
+            for(int j=i+1;j<list.length;j++){
+                if(list[j]<list[minIndex]){
+
+
+                    minIndex=j;
+                }
+            }
+            int temp=list[i];
+            list[i]=list[minIndex];
+            list[minIndex]=temp;
+            System.out.println(Arrays.toString(list));
+        }
+        return list;
+    }
+    //bubble sort O(n^2) space O(1)
+    public static int[] bubbleSort(int[] list){
+
+        for(int i=0;i<list.length-1;i++){
+            for(int j=0;j<list.length-1;j++){
+                if(list[j]>list[j+1]){
+                    int temp=list[j];
+                    list[j]=list[j+1];
+                    list[j+1]=temp;
+                }
+            }
+        }
+        return list;
+    }
+
+
     //factorial recursive
     public static int findFactorialRecursive(int number){
 
