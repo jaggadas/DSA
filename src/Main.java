@@ -57,6 +57,7 @@ public class Main {
         }
         return list;
     }
+
     //bubble sort O(n^2) space O(1)
     public static int[] bubbleSort(int[] list){
 
@@ -84,6 +85,14 @@ public class Main {
     }
     static int a=0;
     static int b=1;
+    //findFibonacciRecursive
+    public static int findFibonacciRecursiveTry2(int n){
+        if (n == 1) {
+            return 0;
+        }
+        return 1;
+     //   return findFibonacciRecursive()
+    }
     //fibonacci iterative
     public static int findFibonacciIterative(int numberOfTerms){//O(n)
         int a=0;
@@ -347,8 +356,15 @@ class BinarySearchTree{
             parentNode.right=replacementNode;
         }
     }
+    public void breadthFirstSearch(){
+        MyTreeNode currentNode=root;
+        ArrayList<Integer> list=new ArrayList<>();
+       MyQueueForBFS queue = new MyQueueForBFS();
+        queue.enqueue(currentNode);
+    }
 
 }
+
 
 //own graph
 class Graph{
@@ -382,7 +398,47 @@ class Graph{
         }
     }
 }
+//class MyQueueForBFS
+class MyQueueForBFS{
+    MyLinkedListNodeForBFS first;
+    MyLinkedListNodeForBFS last;
+    int length;
+    MyQueueForBFS(){
+        first=null;
+        last=null;
+        length=0;
+    }
+    MyLinkedListNodeForBFS peek(){
+        return first;
+    }
+    void enqueue(MyTreeNode value){
+        MyLinkedListNodeForBFS node=new MyLinkedListNodeForBFS(value,null);
+        if(length==0){
+            length++;
+            first=node;
+            last=node;
+            return;
+        }
+        last.next=node;
+        last=node;
+        length++;
 
+    }
+    void dequeue(){
+        if(first==null){
+            return;
+        }
+        if(first==last){
+            last=null;
+        }
+        first=first.next;
+        length--;
+    }
+    @Override
+    public String toString(){
+        return "MyQueue {"+"first :"+first+", last :"+last+", length :"+length+"}";
+    }
+}
 //own queue
 class MyQueue{
     MyLinkedListNode first;
@@ -548,6 +604,17 @@ class MyLinkedListNode{
         return ""+value;
     }
 }
+class MyLinkedListNodeForBFS{
+    MyTreeNode value;
+    MyLinkedListNodeForBFS next;
+    MyLinkedListNodeForBFS(MyTreeNode value, MyLinkedListNodeForBFS node){
+        this.value=value;
+        this.next=node;
+    }
+    @Override
+    public String toString(){
+        return ""+value;
+    }}
 class MyLinkedList{
 
     MyLinkedListNode head;
