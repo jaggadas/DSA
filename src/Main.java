@@ -4,11 +4,12 @@ import netscape.javascript.JSObject;
 import java.util.*;
 
 public class Main {
+    private static final HashMap<Integer, Integer> cache = new HashMap<>();
     public static void main(String[] args) {
 
-        Integer [] list={4,1,2,5,7,3,8,3};
-        System.out.println(Arrays.toString(insertionSort(list)));
+        System.out.println(fibonacciMaster(4));
     }
+
 
     //insertion sort worst O(n2) best O(n)
     public static Integer[] insertionSort(Integer[] array) {
@@ -57,7 +58,19 @@ public class Main {
         }
         return list;
     }
+    //Dynamic programming try it out, caching results for same input
 
+    public static int memoizedAdd80ToGivenNumber(int n){
+        HashMap<Integer,Integer> cache=new HashMap<>();
+
+        if(cache.containsKey(n)){
+            return cache.get(n);
+        }else{
+            System.out.println("long time");
+            cache.put(n,n+80);
+            return cache.get(n);
+        }
+    }
     //bubble sort O(n^2) space O(1)
     public static int[] bubbleSort(int[] list){
 
@@ -232,6 +245,17 @@ public class Main {
         }
         return -1;
     }
+    //dynamic fibonacci
+    public static int fibonacciMaster(int n) {
+        if(cache.containsKey(n)) {
+            return cache.get(n);
+        }
+        if(n < 2){
+            return n;
+        }
+        cache.put(n, fibonacciMaster(n - 1) + fibonacciMaster(n - 2));
+        return cache.get(n);
+    }
 }
 
 class MyTreeNode {
@@ -356,11 +380,95 @@ class BinarySearchTree{
             parentNode.right=replacementNode;
         }
     }
-    public void breadthFirstSearch(){
+    public ArrayList<Integer> breadthFirstSearch(){
         MyTreeNode currentNode=root;
+
         ArrayList<Integer> list=new ArrayList<>();
        MyQueueForBFS queue = new MyQueueForBFS();
         queue.enqueue(currentNode);
+        while(queue.length>0){
+            currentNode=queue.dequeue();
+            list.add(currentNode.value);
+            if(currentNode.left!=null){
+                queue.enqueue(currentNode.left);
+            }
+            if(currentNode.right!=null){
+                queue.enqueue(currentNode.right);
+            }
+        }
+
+        return list;
+
+    }
+    public List<Integer> breathFirstSearchR() {
+        MyQueueForBFS queue = new MyQueueForBFS();
+        queue.enqueue(root);
+        return breadthFirstSearchR(queue, new ArrayList<>());
+    }
+    public ArrayList<Integer> DFSInorder(){
+
+        return traverseInorder(root,new ArrayList<>());
+    }
+
+    private ArrayList<Integer> traverseInorder(MyTreeNode node,ArrayList<Integer> list) {
+
+        if(node.left!=null){
+            traverseInorder(node.left,list);
+        }
+        list.add(node.value);
+        if(node.right!=null){
+            traverseInorder(node.right,list);
+        }
+        return list;
+    }
+
+    public ArrayList<Integer> DFSPostorder(){
+        return traversePostorder(root,new ArrayList<Integer>());
+    }
+    public ArrayList<Integer> DFSPreorder(){
+        return traversePreorder(root,new ArrayList<Integer>());
+    }
+
+    private ArrayList<Integer> traversePreorder(MyTreeNode node, ArrayList<Integer> list) {
+
+        list.add(node.value);
+        if(node.left!=null){
+            traversePreorder(node.left,list);
+        }
+
+        if(node.right!=null){
+            traversePreorder(node.right,list);
+        }
+        return list;
+    }
+    private ArrayList<Integer> traversePostorder(MyTreeNode node, ArrayList<Integer> list) {
+
+        if(node.left!=null){
+            traversePostorder(node.left,list);
+        }
+        if(node.right!=null){
+            traversePostorder(node.right,list);
+        }
+        list.add(node.value);
+        return list;
+    }
+
+    public ArrayList<Integer> breadthFirstSearchR(MyQueueForBFS queue, ArrayList<Integer> list){
+
+        if(queue.length==0){
+            return list;
+        }
+
+        MyTreeNode currentNode = queue.dequeue();
+        list.add(currentNode.value);
+        if(currentNode.left!=null){
+            queue.enqueue(currentNode.left);
+        }
+        if(currentNode.right!=null){
+            queue.enqueue(currentNode.right);
+        }
+
+        return breadthFirstSearchR(queue,list);
     }
 
 }
@@ -424,15 +532,18 @@ class MyQueueForBFS{
         length++;
 
     }
-    void dequeue(){
+    MyTreeNode dequeue(){
+
         if(first==null){
-            return;
+            return null;
         }
+        MyLinkedListNodeForBFS temp=first;
         if(first==last){
             last=null;
         }
         first=first.next;
         length--;
+        return temp.value;
     }
     @Override
     public String toString(){
